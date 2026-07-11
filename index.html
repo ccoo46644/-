@@ -143,7 +143,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 32px;
+            margin-bottom: 20px;
         }
 
         button {
@@ -179,6 +179,81 @@
             transform: scale(0.95);
         }
 
+        /* 仿 LINE 風格的動態領取通知欄 */
+        .notification-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .notification-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            border-radius: 9999px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            max-width: 360px;
+            width: 100%;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .notification-bar.fade-out {
+            opacity: 0;
+            transform: scale(0.96);
+        }
+
+        .cart-icon-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #06C755;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .cart-icon-circle svg {
+            width: 16px;
+            height: 16px;
+            color: white;
+        }
+
+        .notification-text {
+            font-size: 14px;
+            color: #374151;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: left;
+        }
+
+        .notification-time {
+            color: #6b7280;
+        }
+
+        .notification-divider {
+            color: #d1d5db;
+            margin: 0 4px;
+        }
+
+        .notification-name {
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .notification-action {
+            color: #4b5563;
+        }
+
         /* 貼圖網格分隔線 */
         .grid-divider {
             border-top: 1px solid #f3f4f6;
@@ -198,13 +273,13 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px;
-            padding-bottom: 24px;
+            padding-bottom: 32px;
         }
 
         .sticker-item {
             cursor: pointer;
             position: relative;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 1;
         }
 
@@ -215,89 +290,11 @@
             object-fit: contain;
         }
 
+        /* 原地放大，跟真的 LINE 貼圖點擊一樣的預覽觸感 */
         .sticker-item.active {
             transform: scale(1.35);
             z-index: 50;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
-        }
-
-        /* 彈出視窗 */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            cursor: pointer;
-            -webkit-user-select: none;
-            user-select: none;
-            animation: fadeIn 0.2s ease-out forwards;
-        }
-
-        .modal-overlay.hidden {
-            display: none;
-        }
-
-        .modal-content {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            max-width: 85%;
-        }
-
-        @media (min-width: 768px) {
-            .modal-content {
-                max-width: 420px;
-            }
-        }
-
-        .modal-image {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            max-height: 62vh;
-            filter: drop-shadow(0 20px 50px rgba(255, 255, 255, 0.2));
-            animation: popupOpen 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        .modal-glow {
-            position: absolute;
-            width: 320px;
-            height: 320px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            filter: blur(90px);
-            pointer-events: none;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes popupOpen {
-            0% {
-                opacity: 0;
-                transform: scale(0.5) rotate(-5deg);
-            }
-            50% {
-                transform: scale(1.1) rotate(2deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0deg);
-            }
+            filter: drop-shadow(0 10px 25px rgba(0,0,0,0.18));
         }
 
         @media (max-width: 600px) {
@@ -316,7 +313,7 @@
 
             .button-group {
                 gap: 10px;
-                margin-bottom: 24px;
+                margin-bottom: 16px;
             }
 
             button {
@@ -370,6 +367,25 @@
                 <button class="btn-download" onclick="window.location.href='https://goodgifttosend.tw/hDMlp'">下載</button>
             </div>
 
+            <!-- 仿 LINE 風格的動態領取貼圖通知欄 -->
+            <div class="notification-container">
+                <div class="notification-bar" id="notificationBar">
+                    <div class="cart-icon-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="8" cy="21" r="1"></circle>
+                            <circle cx="19" cy="21" r="1"></circle>
+                            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                        </svg>
+                    </div>
+                    <div class="notification-text">
+                        <span class="notification-time" id="noticeTime">剛剛</span>
+                        <span class="notification-divider">，</span>
+                        <span class="notification-name" id="noticeName">陳冠宇</span>
+                        <span class="notification-action"> 領取了貼圖</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- 貼圖網格分隔 -->
             <div class="grid-divider">
                 <div class="grid-hint">點擊貼圖即可預覽。</div>
@@ -377,14 +393,6 @@
                 <!-- 貼圖網格 -->
                 <div class="sticker-grid" id="stickerGrid"></div>
             </div>
-        </div>
-    </div>
-
-    <!-- 彈出視窗 -->
-    <div id="modal" class="modal-overlay hidden" onclick="closeModal(event)">
-        <div class="modal-glow"></div>
-        <div class="modal-content">
-            <img id="modalImage" class="modal-image" alt="全螢幕預覽" referrerPolicy="no-referrer" />
         </div>
     </div>
 
@@ -400,9 +408,10 @@
         function renderStickers() {
             const grid = document.getElementById('stickerGrid');
             grid.innerHTML = stickers.map(sticker => `
-                <div class="sticker-item" onclick="openModal(${sticker.id}, '${sticker.animUrl}')">
+                <div class="sticker-item" id="sticker-${sticker.id}" onclick="toggleSticker(${sticker.id})">
                     <img 
                         src="${sticker.url}" 
+                        id="img-${sticker.id}"
                         alt="貼圖 ${sticker.id}"
                         referrerPolicy="no-referrer"
                     />
@@ -410,48 +419,89 @@
             `).join('');
         }
 
-        // 打開彈出視窗
-        let autoCloseTimer;
-        function openModal(stickerId, animUrl) {
-            const modal = document.getElementById('modal');
-            const modalImage = document.getElementById('modalImage');
+        // 原地放大預覽控制 (跟真的 LINE 貼圖一樣)
+        let activeStickerId = null;
+        function toggleSticker(stickerId) {
+            const currentItem = document.getElementById(`sticker-${stickerId}`);
+            const currentImg = document.getElementById(`img-${stickerId}`);
+            const stickerData = stickers.find(s => s.id === stickerId);
             
-            modalImage.src = animUrl;
-            modal.classList.remove('hidden');
-
-            // 清除之前的計時器
-            if (autoCloseTimer) {
-                clearTimeout(autoCloseTimer);
-            }
-
-            // 3 秒後自動關閉
-            autoCloseTimer = setTimeout(() => {
-                closeModal();
-            }, 3000);
-        }
-
-        // 關閉彈出視窗
-        function closeModal(event) {
-            // 如果是點擊背景才關閉，點擊內容區域不關閉
-            if (event && event.target.id !== 'modal') {
+            // 如果點擊的是已經放大的貼圖，則將其關閉
+            if (activeStickerId === stickerId) {
+                currentItem.classList.remove('active');
+                if (currentImg && stickerData) {
+                    currentImg.src = stickerData.url;
+                }
+                activeStickerId = null;
                 return;
             }
 
-            const modal = document.getElementById('modal');
-            modal.classList.add('hidden');
-
-            // 清除計時器
-            if (autoCloseTimer) {
-                clearTimeout(autoCloseTimer);
+            // 關閉目前放大的貼圖
+            if (activeStickerId !== null) {
+                const prevItem = document.getElementById(`sticker-${activeStickerId}`);
+                const prevImg = document.getElementById(`img-${activeStickerId}`);
+                const prevStickerData = stickers.find(s => s.id === activeStickerId);
+                if (prevItem) {
+                    prevItem.classList.remove('active');
+                }
+                if (prevImg && prevStickerData) {
+                    prevImg.src = prevStickerData.url;
+                }
             }
+
+            // 放大新點擊的貼圖，並切換成動畫 URL
+            currentItem.classList.add('active');
+            if (currentImg && stickerData) {
+                currentImg.src = stickerData.animUrl;
+            }
+            activeStickerId = stickerId;
         }
 
-        // 點擊背景關閉
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal(e);
+        // 點擊貼圖以外的地方時收起放大效果
+        document.addEventListener('click', function(e) {
+            if (activeStickerId !== null) {
+                const isStickerItem = e.target.closest('.sticker-item');
+                if (!isStickerItem) {
+                    const activeItem = document.getElementById(`sticker-${activeStickerId}`);
+                    const activeImg = document.getElementById(`img-${activeStickerId}`);
+                    const stickerData = stickers.find(s => s.id === activeStickerId);
+                    if (activeItem) {
+                        activeItem.classList.remove('active');
+                    }
+                    if (activeImg && stickerData) {
+                        activeImg.src = stickerData.url;
+                    }
+                    activeStickerId = null;
+                }
             }
         });
+
+        // 領取通知之隨機庫（10 組台灣人名、領取時間）
+        const names = ["陳冠宇", "林雅婷", "張家豪", "黃怡君", "王俊傑", "劉婷婷", "李怡萱", "蔡志明", "鄭雅琪", "許家瑋"];
+        const times = ["剛剛", "1 分鐘前", "3 分鐘前", "5 分鐘前", "8 分鐘前", "12 分鐘前", "15 分鐘前", "24 分鐘前", "30 分鐘前", "45 分鐘前"];
+        let noticeIndex = 0;
+
+        function updateNotification() {
+            const bar = document.getElementById('notificationBar');
+            const timeEl = document.getElementById('noticeTime');
+            const nameEl = document.getElementById('noticeName');
+
+            // 觸發漸隱
+            bar.classList.add('fade-out');
+
+            setTimeout(() => {
+                // 更換新內容
+                noticeIndex = (noticeIndex + 1) % names.length;
+                timeEl.textContent = times[noticeIndex];
+                nameEl.textContent = names[noticeIndex];
+
+                // 觸發漸顯
+                bar.classList.remove('fade-out');
+            }, 300); // 與 CSS 中的 transition 時間配合
+        }
+
+        // 每 4 秒自動切換一次通知
+        setInterval(updateNotification, 4000);
 
         // 初始化
         renderStickers();
